@@ -1,0 +1,13 @@
+title exercise 0.6: New note
+
+note right of browser
+user creates a new 
+note and clicks save.
+end note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+
+note left of server
+server no longer asks the 
+browser to reload the page.
+end note
