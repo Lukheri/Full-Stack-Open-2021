@@ -6,7 +6,7 @@ note left of server:server asks the browser to reload the page.
 server->browser:HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
 
 note over server
-the server rights 
+the server writes 
 the new note
 end note
 
