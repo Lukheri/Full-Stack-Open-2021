@@ -1,1 +1,1 @@
-# FullStack Open 2021 part 0 submissions
+# FullStack Open 2021 submissions
