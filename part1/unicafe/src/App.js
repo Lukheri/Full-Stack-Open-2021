@@ -24,17 +24,17 @@ const App = () => {
     goodFeedback: {
       value:good,
       text:"good",
-      increase: () => setGood(good+1)
+      increase: () => setGood(prevGood => prevGood +1)
     },
     neutralFeedback: {
       value:neutral,
       text:"neutral",
-      increase: () => setNeutral(neutral+1)
+      increase: () => setNeutral(prevNeutral => prevNeutral +1)
     },
     badFeedback: {
       value:bad,
       text:"bad",
-      increase: () => setBad(bad+1)
+      increase: () => setBad(prevBad => prevBad + 1)
     }
   }
 
@@ -48,7 +48,9 @@ const App = () => {
       <Display text={feedbacks.goodFeedback.text} value={good} />
       <Display text={feedbacks.neutralFeedback.text} value={neutral} />
       <Display text={feedbacks.badFeedback.text} value={bad} />
-      
+      <Display text={"all"} value={good+neutral+bad} />
+      <Display text={"average"} value={(good-bad)/(good+neutral+bad)} />
+      <Display text={"good-bad"} value={good-bad} />
     </div>
   )
 }
