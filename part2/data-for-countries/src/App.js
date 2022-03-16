@@ -4,32 +4,22 @@ import axios from 'axios'
 
 const Display = ({ countries, filter }) => {
   if (countries){
-    const arr = countries.filter(country => country.name.common.toLowerCase().includes(filter.toLowerCase()))
+    const filteredCountries = countries.filter(country => country.name.common.toLowerCase().includes(filter.toLowerCase()))
 
-    if (arr.length > 10){
+    if (filteredCountries.length > 10){
       return <>Too many matches, specify another filter</>
     }
 
-    else if (arr.length === 1){
-      const filtered_country = arr[0]
+    else if (filteredCountries.length === 1){
       return(
-        <div>
-          <h2>{filtered_country.name.common}</h2>
-          capital: {filtered_country.capital}<br></br>
-          area: {filtered_country.area}
-          <h3>languages:</h3>
-          <ul>
-            {Object.keys(filtered_country.languages).map((language, i) => <li key={i}>{filtered_country.languages[language]}</li>)}
-          </ul>
-          <img src={filtered_country.flags.png} />
-        </div>
+        <ShowCountry country={filteredCountries[0]} />
       )
     }
 
     else{
       return(
         <ul>
-          {arr.map(country => <li key={country.name.common}>{country.name.common}</li>)}
+          {filteredCountries.map((country, i) => <DisplayFilteredCountries key={i} country={country} />)}
         </ul>
       )         
     }
@@ -38,16 +28,31 @@ const Display = ({ countries, filter }) => {
   return <></>
 }
 
-const Country = ({ country, filter }) => {
-
-  if (country.toLowerCase().includes(filter.toLowerCase())){
-    return(
-        <li> {country} </li>
-    )
-  }  
+const DisplayFilteredCountries = ({ country }) => {
+  const [show, setShow] = useState(false)
 
   return(
-    <></>
+    <div>
+      <li>{country.name.common} <button onClick={() => setShow(!show)}>show</button></li>
+      {show && <ShowCountry country={country}/ >}
+      
+    </div>
+    
+  )
+}
+
+const ShowCountry = ({ country }) =>{
+  return(
+    <div>
+      <h2>{country.name.common}</h2>
+      capital: {country.capital}<br></br>
+      area: {country.area}
+      <h3>languages:</h3>
+      <ul>
+        {Object.keys(country.languages).map((language, i) => <li key={i}>{country.languages[language]}</li>)}
+      </ul>
+      <img src={country.flags.png} />
+    </div>
   )
 }
 
