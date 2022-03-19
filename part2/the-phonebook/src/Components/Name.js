@@ -1,9 +1,13 @@
 import React from 'react'
 
-const Name = ({ name, number, filter }) =>{
-    if (name.toLowerCase().includes(filter.toLowerCase())){
+const Name = ({ contact , filter, deleteContact }) =>{
+    if (contact.name.toLowerCase().includes(filter.toLowerCase())){
         return(
-            <li> {name} {number} </li>
+            <div>
+                <li> {contact.name} {contact.number} <button onClick={deleteContact}>delete</button></li>
+                
+            </div>
+
         )
     }
     return(

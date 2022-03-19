@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Display from './Components/Display'
 import Filter from './Components/Filter'
 import PersonForm from './Components/PersonForm'
+import personService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -11,10 +11,10 @@ const App = () => {
   const [filter, setFilter] = useState('')
 
   const hook = () => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
+    personService
+      .getAll()
+      .then(initialPhoneBook => {
+        setPersons(initialPhoneBook)
       })
   }
 
@@ -23,20 +23,43 @@ const App = () => {
   const addForm = (event) => {
     event.preventDefault()
     if (persons.some(person => person.name === newName)){
-      console.log('User already exists')
-      window.alert(`${newName} is already in the phonebook`)
+      if (window.confirm(`${newName} is already in the phonebook, replace the old numbe with the new one?`)){
+        const contact = persons.find(person => person.name === newName)
+        const updatedContact = {...contact, number: newNumber}
+
+        personService
+          .update(contact.id, updatedContact)
+          .then(returnedContact => {
+            setPersons(persons.map(contact => contact.name !== newName ? contact : returnedContact))
+            setNewName('')
+            setNewNumber('')
+          })
+      }
+      
     }
 
     else{
       const noteObject = {
         name: newName,
-        number: newNumber,
-        id: persons.length + 1
+        number: newNumber
       }
-      setPersons(persons.concat(noteObject))  
+      personService
+      .create(noteObject)
+      .then(returnedPhoneBook => {
+        setPersons(persons.concat(returnedPhoneBook)) 
+        setNewName('')
+        setNewNumber('')
+      })
     }
-    setNewName('')
-    setNewNumber('')
+  }
+
+  const deleteContact = (id, name) =>{
+    if (window.confirm(`Delete ${name}?`)){
+      const changedPhoneBook = persons.filter(contact => contact.id !== id)
+      personService.remove(id)
+      setPersons(changedPhoneBook)
+    }
+
   }
   
   const handleNewNameChange = (event) => {
@@ -59,7 +82,7 @@ const App = () => {
       <PersonForm addForm={addForm} newName={newName} handleNewNameChange={handleNewNameChange}
       newNumber={newNumber} handleNewNumberChange={handleNewNumberChange} />
       <h2>Contacts</h2>
-      <Display persons={persons} filter={filter} />
+      <Display persons={persons} filter={filter} deleteContact={deleteContact}/>
     </div>
   )
 }
