@@ -1,14 +1,19 @@
+import './index.css'
 import { useState, useEffect } from 'react'
 import Display from './Components/Display'
 import Filter from './Components/Filter'
 import PersonForm from './Components/PersonForm'
 import personService from './services/persons'
+import Notification from './Components/Notification'
+
+// npx json-server --port 3001 --watch db.json
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
 
   const hook = () => {
     personService
@@ -23,7 +28,7 @@ const App = () => {
   const addForm = (event) => {
     event.preventDefault()
     if (persons.some(person => person.name === newName)){
-      if (window.confirm(`${newName} is already in the phonebook, replace the old numbe with the new one?`)){
+      if (window.confirm(`${newName} is already in the phonebook, replace the old number with the new one?`)){
         const contact = persons.find(person => person.name === newName)
         const updatedContact = {...contact, number: newNumber}
 
@@ -34,9 +39,17 @@ const App = () => {
             setNewName('')
             setNewNumber('')
           })
-      }
-      
+          .catch(error => {
+            setErrorMessage(
+              [`Information of ${contact.name} was already removed from server`,  {color: 'red'}]
+            )
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
+            setPersons(persons.filter(n => n.name !== newName))
+          })
     }
+  }
 
     else{
       const noteObject = {
@@ -50,6 +63,12 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })
+        setErrorMessage(
+          [`Added ${newName}`, {color: 'green'}]
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
     }
   }
 
@@ -77,6 +96,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage} />
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <h2>Add new Contact</h2>
       <PersonForm addForm={addForm} newName={newName} handleNewNameChange={handleNewNameChange}
