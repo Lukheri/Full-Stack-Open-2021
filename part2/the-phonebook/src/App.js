@@ -63,6 +63,17 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })
+      .catch(error => {
+        console.log(error.response)
+        setErrorMessage(
+          [`${error.response.data.error}`, {color: 'red'}]
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      }
+        
+      )
         setErrorMessage(
           [`Added ${newName}`, {color: 'green'}]
         )
