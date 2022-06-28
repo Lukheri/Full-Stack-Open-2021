@@ -1,8 +1,8 @@
 const ld = require('lodash')
 
-const dummy = (blogs) => {
-  return 1
-}
+// const dummy = (blogs) => {
+//   return 1
+// }
 
 const totalLikes = (blogs) => {
   return blogs.reduce((sum, blog) => sum + blog.likes, 0)
@@ -30,10 +30,29 @@ const mostBlogs = (blogs) => {
   }
 }
 
+const mostLikes = (blogs) => {
+  const authors = ld.uniq(blogs.map(blog => blog.author))
+  const authorLikes = {}
+  for (const author of authors) {
+    authorLikes[author] = 0
+  }
+
+  for (let i=0; i<blogs.length; i++){
+    authorLikes[blogs[i].author] += blogs[i].likes
+  }
+
+  const maxLikes = Math.max(...Object.values(authorLikes))
+  return {
+    'author': Object.keys(authorLikes).find(key => authorLikes[key] === maxLikes),
+    'likes': maxLikes
+  }
+}
+
 module.exports = {
-  dummy,
+  // dummy,
   totalLikes,
   favBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }
 
