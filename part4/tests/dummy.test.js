@@ -45,7 +45,7 @@ const listBlog = [
 const listBlog2 = [
   {
     title: 'luke blog lmao',
-    author: 'Luke',
+    author: 'Luke Heriiiii',
     url: 'www.luke.com/blog',
     likes: 5,
     id: '62b9623fc203e66ef987ff53'
@@ -63,6 +63,13 @@ const listBlog2 = [
     url: 'www.luke.com/blog/cry',
     likes: 999,
     id: '62b977d1f4a2bce86494d524'
+  },
+  {
+    title: 'luke blog 4 final',
+    author: 'Luke Heri',
+    url: 'www.luke.com/blog/YESSSSS',
+    likes: 1,
+    id: '62b979180a0d20fb704ab892'
   }
 ]
   
@@ -98,6 +105,22 @@ describe('favorite blog', () => {
       title: 'luke blog 2.5 idk',
       author: 'Luke Heriiiii',
       likes: 999
+    })
+  })
+})
+
+describe('most blogs', () => {
+  test('list with multiple blogs', () => {
+    expect(listHelper.mostBlogs(listBlog)).toEqual({
+      'author': 'Luke Heri',
+      'blogs': 3
+    })
+  })
+
+  test('list with same max blogs', () => {
+    expect(listHelper.mostBlogs(listBlog2)).toEqual({
+      'author': 'Luke Heriiiii',
+      'blogs': 2
     })
   })
 })
