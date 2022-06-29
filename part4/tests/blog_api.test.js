@@ -101,7 +101,7 @@ test('a valid blog can be added', async () => {
   )
 })
 
-test('test likes', async () => {
+test('likes is undefined', async () => {
   const newBlog = {
     title: 'async/await simplifies making async calls',
     author: 'Luke Heri',
@@ -118,6 +118,46 @@ test('test likes', async () => {
   const blog = response.body[response.body.length-1]
 
   expect(blog.likes).toBe(0)
+})
+
+describe('title and url are undefined', () => {
+  test('missing title', async () => {
+    const newBlog = {
+      author: 'Luke Heri',
+      url: 'http://coding.com/is/fun.html',
+      likes: 6
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
+  
+  test('missing url', async () => {
+    const newBlog = {
+      title: 'async/await simplifies making async calls',
+      author: 'Luke Heri',
+      likes: 6
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
+
+  test('missing title and url', async () => {
+    const newBlog = {
+      author: 'Luke Heri',
+      likes: 6
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })  
 })
 
 afterAll(() => {
