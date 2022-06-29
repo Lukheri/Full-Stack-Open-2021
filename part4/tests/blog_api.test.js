@@ -4,7 +4,7 @@ const app = require('../app')
 
 const api = supertest(app)
 
-// const Blog = require('../models/blog')
+const Blog = require('../models/blog')
 
 const blogs = [
   {
@@ -56,6 +56,14 @@ const blogs = [
     __v: 0
   }  
 ]
+
+beforeEach(async () => {
+  await Blog.deleteMany({})
+  for(let i=0; i<blogs.length; i++){
+    let blogObject = new Blog(blogs[i])
+    await blogObject.save()
+  }
+})
 
 test('length of blogs', async () => {
   const response = await api.get('/api/blogs')
