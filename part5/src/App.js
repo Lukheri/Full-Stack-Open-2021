@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
@@ -29,7 +31,10 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      console.log('error')
+      setErrorMessage(['Wrong credentials', {color: 'red'}])
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
     }
   }
 
@@ -106,6 +111,13 @@ const App = () => {
         setNewAuthor('')
         setNewUrl('')
       })
+
+    setErrorMessage(
+      [`Added new blog ${newTitle} by ${newAuthor}`, {color: 'green'}]
+      )
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
   }
 
   const blogForm = () => (
@@ -138,12 +150,14 @@ const App = () => {
   return (
     <div>
       {user === null ?
+        <h2>log in to application</h2> :
+        <h2>blogs</h2>
+      }
+      <Notification message={errorMessage} />
+
+      {user === null ?
+          loginForm() :
         <div>
-          <h2>log in to application</h2>
-          {loginForm()}
-        </div> :
-        <div>
-          <h2>blogs</h2>
           <p>{user.name} is logged-in <button onClick={handleLogout}>logout</button></p>
           {blogForm()}
           {blogs.map(blog =>
