@@ -122,7 +122,7 @@ describe('title and url are undefined', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
-      .expect(400)
+      .expect(401)
   })
   
   test('missing url', async () => {
@@ -135,7 +135,7 @@ describe('title and url are undefined', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
-      .expect(400)
+      .expect(401)
   })
 
   test('missing title and url', async () => {
@@ -147,7 +147,7 @@ describe('title and url are undefined', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
-      .expect(400)
+      .expect(401)
   })  
 })
 

@@ -1,16 +1,6 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-// const User = require('../models/user')
-// const jwt = require('jsonwebtoken')
 const middleware = require('../utils/middleware')
-
-// const getTokenFrom = request => {
-//   const authorization = request.get('authorization')
-//   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-//     return authorization.substring(7)
-//   }
-//   return null
-// }
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog
@@ -29,12 +19,6 @@ blogsRouter.get('/:id', async (request, response) => {
 
 blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
   const body = request.body
-
-  // const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  // if (!decodedToken.id) {
-  //   return response.status(401).json({ error: 'token missing or invalid' })
-  // }
-  // const user = await User.findById(decodedToken.id)
   const user = request.user
 
   const blog = new Blog({
@@ -58,7 +42,6 @@ blogsRouter.delete('/:id', middleware.userExtractor, async (request, response) =
 
   const user = request.user
 
-  // console.log(user.mongooseCollection._conditions.id)
   if(blog.user.toString() === user.id){
     await Blog.findByIdAndRemove(request.params.id)
     response.status(204).end()
