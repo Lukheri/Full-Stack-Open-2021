@@ -103,6 +103,20 @@ const App = () => {
     setBlogs(blogs.map(blog => blog.id !== blogObject.id ? blog : blogUpdated).sort((a, b) => b.likes - a.likes))
   }
 
+  const deleteBlog = async (blogObject) => {
+    if(window.confirm(`Delete ${blogObject.title} by ${blogObject.author}?`)) {
+      blogService.remove(blogObject.id)
+    }
+    setBlogs(blogs.filter(blog => blog.id !== blogObject.id))
+
+    setErrorMessage(
+      [`Deleted ${blogObject.title} by ${blogObject.author}`, {color: 'red'}]
+      )
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
+  }
+
   return (
     <div>
       {user === null ?
@@ -121,7 +135,7 @@ const App = () => {
             />
           </Togglable>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} updateBlog={updateBlog}/>
+            <Blog key={blog.id} blog={blog} updateBlog={updateBlog} deleteBlog={deleteBlog} userLoggedIn={user} />
           )}
         </div>
       }
