@@ -64,7 +64,6 @@ const App = () => {
         setNewNumber('')
       })
       .catch(error => {
-        console.log(error.response)
         setErrorMessage(
           [`${error.response.data.error}`, {color: 'red'}]
         )
